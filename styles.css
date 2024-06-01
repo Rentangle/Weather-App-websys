@@ -1,0 +1,45 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #87ceeb, #f0f0f0);
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+input,
+button {
+  padding: 10px;
+  margin: 10px;
+  font-size: 16px;
+  z-index: 1; /* Make sure inputs are above the background */
+}
+
+#weather-info {
+  margin-top: 20px;
+  text-align: center;
+  z-index: 1; /* Make sure the weather info is above the background */
+}
+
+h2 {
+  margin: 0;
+}
+
+@keyframes moveClouds {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.clouds.second {
+  top: 40%;
+  animation: moveClouds 120s linear infinite;
+}
