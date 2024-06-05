@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+#map {
+  height: 100vh; /* Fullscreen height */
+  width: 100vw; /* Fullscreen width */
+  position: relative;
+  z-index: 1;
+}
+
+.overlay {
+  position: absolute;
+  z-index: 10; /* Ensure overlays are above the map */
+  top: 10px; /* Position relative to the top of the map */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.overlay h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.overlay #search-container {
+  margin-top: 10px;
+}
+
+.overlay #weather-info {
+  margin-top: 10px;
+}
