@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather Map</title>
+    <title>Interactive Weather Map with Forecast</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <!-- Leaflet Control Geocoder CSS -->
@@ -53,7 +53,7 @@
   <body>
     <div id="map"></div>
     <div class="overlay">
-      <h1>Weather Map</h1>
+      <h1>Interactive Weather Map with Forecast</h1>
       <div id="search-container">
         <input
           type="text"
@@ -74,9 +74,44 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <!-- Leaflet Control Geocoder JS -->
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-    <!-- Your weather API JS (e.g., OpenWeatherMap) -->
+    <!-- OpenWeatherMap API script -->
     <script>
-      // Initialize the map with Manila coordinates
+      // Function to fetch current weather data from OpenWeatherMap
+      async function getWeatherData(lat, lon) {
+        const apiKey = "4da828d2bcea01260b3cae2836f90b63";
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+        );
+        if (!response.ok) {
+          alert("Error fetching weather data");
+          return null;
+        }
+        const data = await response.json();
+        return data;
+      }
+
+      // Function to update marker and weather information
+      async function updateMarker(lat, lon) {
+        const weatherData = await getWeatherData(lat, lon);
+        if (!weatherData) return;
+
+        marker.setLatLng([lat, lon]);
+        marker
+          .bindPopup(
+            `<b>${weatherData.name}</b><br>Temperature: ${weatherData.main.temp} °C<br>Weather: ${weatherData.weather[0].description}`
+          )
+          .openPopup();
+        map.setView([lat, lon], 13);
+
+        // Update weather information
+        document.getElementById("weather-info").innerHTML = `
+                <h2>${weatherData.name}</h2>
+                <p>Temperature: ${weatherData.main.temp} °C</p>
+                <p>Weather: ${weatherData.weather[0].description}</p>
+            `;
+      }
+
+      // Initialize the map with a starting view
       var map = L.map("map").setView([14.5995, 120.9842], 13); // Manila coordinates
 
       // Add OpenStreetMap tiles
@@ -85,34 +120,6 @@
       }).addTo(map);
 
       var marker = L.marker([14.5995, 120.9842]).addTo(map); // Initial marker in Manila
-
-      // Function to fetch and display weather data
-      async function getWeatherData(lat, lon) {
-        const apiKey = "YOUR_WEATHER_API_KEY";
-        const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
-        );
-        const data = await response.json();
-        return data;
-      }
-
-      // Function to update marker and weather information
-      async function updateMarker(lat, lon) {
-        const weatherData = await getWeatherData(lat, lon);
-        marker.setLatLng([lat, lon]);
-        marker
-          .bindPopup(
-            `<b>${weatherData.name}</b><br>Temperature: ${weatherData.main.temp} °C<br>Weather: ${weatherData.weather[0].description}`
-          )
-          .openPopup();
-        map.setView([lat, lon], 13);
-        // Update weather information
-        document.getElementById("weather-info").innerHTML = `
-                <h2>${weatherData.name}</h2>
-                <p>Temperature: ${weatherData.main.temp} °C</p>
-                <p>Weather: ${weatherData.weather[0].description}</p>
-            `;
-      }
 
       // Event listener for map clicks
       map.on("click", function (e) {
